@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Search, Filter, ShoppingCart, Star, Heart, Package, Truck, CreditCard, Shield } from 'lucide-react';
+import { useMedicines } from '../hooks/useMedicines';
+import toast from 'react-hot-toast';
 
 const Pharmacy = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [cartItems, setCartItems] = useState<number[]>([]);
+  const { medicines, loading } = useMedicines();
 
   const categories = [
     { id: 'all', name: 'সব ওষুধ', count: 156 },
@@ -78,37 +81,33 @@ const Pharmacy = () => {
       rating: 4.8,
       reviews: 51,
       brand: 'Reckeweg',
-      image: 'https://images.pexels.com/photos/3683071/pexels-photo-3683071.jpeg?auto=compress&cs=tinysrgb&w=300'
-    },
-    {
-      id: 6,
-      name: 'Lycopodium 200',
-      category: 'chronic',
-      price: 145,
-      originalPrice: 170,
-      description: 'লিভার, কিডনি এবং হজমের সমস্যার জন্য',
-      inStock: true,
-      rating: 4.9,
-      reviews: 73,
-      brand: 'SBL',
-      image: 'https://images.pexels.com/photos/3683071/pexels-photo-3683071.jpeg?auto=compress&cs=tinysrgb&w=300'
-    }
-  ];
 
   const filteredMedicines = selectedCategory === 'all' 
     ? medicines 
     : medicines.filter(medicine => medicine.category === selectedCategory);
 
-  const addToCart = (id: number) => {
+  const addToCart = (id: string) => {
     setCartItems([...cartItems, id]);
+    toast.success('কার্টে যোগ করা হয়েছে');
   };
 
-  const removeFromCart = (id: number) => {
+  const removeFromCart = (id: string) => {
     setCartItems(cartItems.filter(item => item !== id));
+    toast.success('কার্ট থেকে সরানো হয়েছে');
   };
 
-  const isInCart = (id: number) => cartItems.includes(id);
+  const isInCart = (id: string) => cartItems.includes(id);
 
+  if (loading) {
+    return (
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4 text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">ওষুধের তথ্য লোড হচ্ছে...</p>
+        </div>
+      </section>
+    );
+  }
   return (
     <section id="pharmacy" className="py-20 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -199,33 +198,33 @@ const Pharmacy = () => {
                 <div className="flex items-center space-x-2 mb-3">
                   <div className="flex items-center space-x-1">
                     <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                    <span className="text-sm font-medium">{medicine.rating}</span>
+                    <span className="text-sm font-medium">4.8</span>
                   </div>
-                  <span className="text-sm text-gray-500">({medicine.reviews} রিভিউ)</span>
+                  <span className="text-sm text-gray-500">(45 রিভিউ)</span>
                 </div>
                 
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
                     <span className="text-2xl font-bold text-blue-600">৳{medicine.price}</span>
-                    <span className="text-sm text-gray-500 line-through">৳{medicine.originalPrice}</span>
+                    <span className="text-sm text-gray-500 line-through">৳{medicine.original_price}</span>
                   </div>
                   <div className="text-sm text-green-600">
-                    ৳{medicine.originalPrice - medicine.price} সাশ্রয়
+                    ৳{medicine.original_price - medicine.price} সাশ্রয়
                   </div>
                 </div>
                 
                 <button
                   onClick={() => isInCart(medicine.id) ? removeFromCart(medicine.id) : addToCart(medicine.id)}
-                  disabled={!medicine.inStock}
+                  disabled={!medicine.in_stock}
                   className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
-                    medicine.inStock
+                    medicine.in_stock
                       ? isInCart(medicine.id)
                         ? 'bg-green-600 text-white hover:bg-green-700'
                         : 'bg-blue-600 text-white hover:bg-blue-700'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }`}
                 >
-                  {!medicine.inStock 
+                  {!medicine.in_stock 
                     ? 'স্টক নেই' 
                     : isInCart(medicine.id) 
                     ? 'কার্টে যোগ হয়েছে' 

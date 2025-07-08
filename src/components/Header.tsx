@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { Menu, X, Phone, Mail, Calendar, ShoppingCart, User, Heart } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import LoginModal from './auth/LoginModal';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -68,10 +72,26 @@ const Header = () => {
               <ShoppingCart className="w-4 h-4" />
               <span>কার্ট</span>
             </button>
-            <button className="flex items-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-              <User className="w-4 h-4" />
-              <span>লগইন</span>
-            </button>
+            {user ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-700">স্বাগতম, {user.user_metadata?.name || user.email}</span>
+                <button 
+                  onClick={signOut}
+                  className="flex items-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <User className="w-4 h-4" />
+                  <span>লগআউট</span>
+                </button>
+              </div>
+            ) : (
+              <button 
+                onClick={() => setIsLoginModalOpen(true)}
+                className="flex items-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <User className="w-4 h-4" />
+                <span>লগইন</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -103,15 +123,33 @@ const Header = () => {
                   <ShoppingCart className="w-4 h-4" />
                   <span>কার্ট</span>
                 </button>
-                <button className="flex items-center justify-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <User className="w-4 h-4" />
-                  <span>লগইন</span>
-                </button>
+                {user ? (
+                  <button 
+                    onClick={signOut}
+                    className="flex items-center justify-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>লগআউট</span>
+                  </button>
+                ) : (
+                  <button 
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="flex items-center justify-center space-x-2 border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    <span>লগইন</span>
+                  </button>
+                )}
               </div>
             </div>
           </nav>
         )}
       </div>
+      
+      <LoginModal 
+        isOpen={isLoginModalOpen} 
+        onClose={() => setIsLoginModalOpen(false)} 
+      />
     </header>
   );
 };

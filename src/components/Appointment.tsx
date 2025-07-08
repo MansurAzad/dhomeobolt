@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, User, Phone, Mail, MapPin, CheckCircle } from 'lucide-react';
+import { useAppointments } from '../hooks/useAppointments';
+import { usePatients } from '../hooks/usePatients';
+import { useAuth } from '../contexts/AuthContext';
+import toast from 'react-hot-toast';
 
 const Appointment = () => {
+  const { user } = useAuth();
+  const { createAppointment } = useAppointments();
+  const { createPatient } = usePatients();
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -12,11 +19,46 @@ const Appointment = () => {
     type: 'chamber'
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Appointment booked:', formData);
-    alert('অ্যাপয়েন্টমেন্ট বুকিং সফল হয়েছে!');
+    
+    if (!user) {
+      toast.error('অ্যাপয়েন্টমেন্ট বুক করতে লগইন করুন');
+      return;
+    }
+
+    try {
+      // Create or find patient
+      const patientData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        date_of_birth: '',
+        gender: '',
+        address: '',
+        medical_history: formData.problem
+      };
+
+      const patient = await createPatient(patientData);
+
+      // Create appointment
+      const appointmentData = {
+        patient_id: patient.id,
+        doctor_id: 'default-doctor-id', // This would be dynamic
+        appointment_date: formData.date,
+        appointment_time: formData.time,
+        type: formData.type as 'chamber' | 'video' | 'home',
+        status: 'pending' as const,
+        problem_description: formData.problem
+      };
+
+      await createAppointment(appointmentData);
+      
+      // Reset form
+      setFormData({ name: '', phone: '', email: '', date: '', time: '', problem: '', type: 'chamber' });
+    } catch (error) {
+      console.error('Appointment booking error:', error);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
