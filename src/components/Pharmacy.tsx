@@ -81,6 +81,9 @@ const Pharmacy = () => {
       rating: 4.8,
       reviews: 51,
       brand: 'Reckeweg',
+      image: 'https://images.pexels.com/photos/3683071/pexels-photo-3683071.jpeg?auto=compress&cs=tinysrgb&w=300'
+    }
+  ];
 
   const filteredMedicines = selectedCategory === 'all' 
     ? medicines 
@@ -206,25 +209,25 @@ const Pharmacy = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
                     <span className="text-2xl font-bold text-blue-600">৳{medicine.price}</span>
-                    <span className="text-sm text-gray-500 line-through">৳{medicine.original_price}</span>
+                    <span className="text-sm text-gray-500 line-through">৳{medicine.originalPrice}</span>
                   </div>
                   <div className="text-sm text-green-600">
-                    ৳{medicine.original_price - medicine.price} সাশ্রয়
+                    ৳{medicine.originalPrice - medicine.price} সাশ্রয়
                   </div>
                 </div>
                 
                 <button
                   onClick={() => isInCart(medicine.id) ? removeFromCart(medicine.id) : addToCart(medicine.id)}
-                  disabled={!medicine.in_stock}
+                  disabled={!medicine.inStock}
                   className={`w-full py-3 px-4 rounded-lg font-semibold transition-colors ${
-                    medicine.in_stock
+                    medicine.inStock
                       ? isInCart(medicine.id)
                         ? 'bg-green-600 text-white hover:bg-green-700'
                         : 'bg-blue-600 text-white hover:bg-blue-700'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }`}
                 >
-                  {!medicine.in_stock 
+                  {!medicine.inStock 
                     ? 'স্টক নেই' 
                     : isInCart(medicine.id) 
                     ? 'কার্টে যোগ হয়েছে' 
