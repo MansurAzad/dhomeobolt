@@ -2,6 +2,44 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Critical CSS - Above the fold styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  body {
+    font-display: swap;
+    text-rendering: optimizeLegibility;
+  }
+}
+
+/* Performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Reduce layout shift */
+.aspect-ratio-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-ratio-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-ratio-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
 /* Custom Animations */
 @keyframes fade-in-up {
   from {
@@ -179,10 +217,12 @@
   animation-delay: 4000ms;
 }
 
-/* Smooth Scrolling */
-html {
-  scroll-behavior: smooth;
+/* Responsive breakpoints optimization */
+@media (max-width: 640px) {
+  .container { padding-left: 1rem; padding-right: 1rem; }
 }
+
+/* Smooth Scrolling */
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
@@ -207,13 +247,6 @@ html {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200px 100%;
   animation: shimmer 1.5s infinite;
-}
-
-/* Responsive Text */
-@media (max-width: 640px) {
-  .text-responsive {
-    font-size: 0.875rem;
-  }
 }
 
 /* Focus States */
@@ -251,16 +284,6 @@ html {
   animation: gradient-x 3s ease infinite;
 }
 
-/* Performance Optimizations */
-* {
-  box-sizing: border-box;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
 /* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -269,6 +292,22 @@ img {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimize font loading */
+@font-face {
+  font-family: 'system-ui';
+  font-style: normal;
+  font-weight: 300 800;
+  font-display: swap;
+  src: local('system-ui'), local('-apple-system'), local('BlinkMacSystemFont');
+}
+
+/* Container queries for better responsive design */
+@container (min-width: 768px) {
+  .container-responsive {
+    padding: 2rem;
   }
 }
 
@@ -296,5 +335,29 @@ img {
   
   .text-gray-600 {
     color: #d1d5db;
+  }
+}
+
+/* Optimize animations for mobile */
+@media (max-width: 768px) {
+  .animate-blob,
+  .animate-gradient-x,
+  .animate-float {
+    animation-duration: 4s;
+  }
+}
+
+/* Critical loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Optimize touch targets for mobile */
+@media (max-width: 768px) {
+  button, a, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
   }
 }

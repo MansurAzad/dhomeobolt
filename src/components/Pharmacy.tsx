@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Search, Filter, ShoppingCart, Star, Heart, Package, Truck, CreditCard, Shield, Zap, Clock } from 'lucide-react';
 import { useMedicines } from '../hooks/useMedicines';
+import LazyImage from './LazyImage';
 import toast from 'react-hot-toast';
 
 const Pharmacy = () => {
@@ -134,7 +135,7 @@ const Pharmacy = () => {
               style={{ animationDelay: `${index * 100}ms` }}
             >
               <div className="relative">
-                <img
+                <LazyImage
                   src={medicine.image_url || 'https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=400'}
                   alt={medicine.name}
                   className="w-full h-40 md:h-48 object-cover group-hover:scale-110 transition-transform duration-300"

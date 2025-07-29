@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, User, BookOpen, Heart, Eye, Share2 } from 'lucide-react';
+import LazyImage from './LazyImage';
 
 const Blog = () => {
   const blogPosts = [
@@ -113,7 +114,7 @@ const Blog = () => {
               {blogPosts.map((post) => (
                 <article key={post.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                   <div className="relative">
-                    <img
+                    <LazyImage
                       src={post.image}
                       alt={post.title}
                       className="w-full h-48 object-cover"
@@ -248,7 +249,7 @@ const Blog = () => {
               <div className="space-y-4">
                 {blogPosts.slice(0, 3).map((post) => (
                   <div key={post.id} className="flex items-start space-x-3">
-                    <img
+                    <LazyImage
                       src={post.image}
                       alt={post.title}
                       className="w-16 h-16 object-cover rounded-lg"
