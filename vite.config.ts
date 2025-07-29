@@ -5,6 +5,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   build: {
+    outDir: 'dist',
+    sourcemap: false,
     rollupOptions: {
       output: {
         manualChunks: {
@@ -13,18 +15,10 @@ export default defineConfig({
           icons: ['lucide-react']
         }
       }
-    },
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true
-      }
     }
   },
   optimizeDeps: {
-    exclude: ['lucide-react'],
-    include: ['react', 'react-dom', '@supabase/supabase-js']
+    include: ['react', 'react-dom', '@supabase/supabase-js', 'lucide-react']
   },
   server: {
     hmr: {
