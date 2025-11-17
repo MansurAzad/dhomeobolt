@@ -184,14 +184,17 @@ export const measurePerformance = (name: string, fn: () => void) => {
 
 // Web Vitals tracking
 export const trackWebVitals = () => {
-  if ('web-vital' in window) {
-    // Track Core Web Vitals
-    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
-      getCLS(console.log);
-      getFID(console.log);
-      getFCP(console.log);
-      getLCP(console.log);
-      getTTFB(console.log);
-    });
+  // Track Core Web Vitals using native Performance API
+  if ('performance' in window && 'PerformanceObserver' in window) {
+    try {
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          console.log(`${entry.name}: ${entry.startTime}`);
+        }
+      });
+      observer.observe({ entryTypes: ['navigation', 'paint', 'largest-contentful-paint'] });
+    } catch (error) {
+      console.error('Performance tracking error:', error);
+    }
   }
 };
